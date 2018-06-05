@@ -647,6 +647,14 @@ $("#select" ).on('change', function() {
 </script>
 </head>
 <body>
+<form autocomplete="off" action="/action_page.php">
+  <div class="autocomplete" style="width:300px;">
+    <input id="myInput" type="text" name="myCountry" placeholder="Country">
+  </div>
+  <input type="submit">
+</form>
+
+
 <select id="select">
 	<option value="all">All</option>
   <option value="Mallard">Mallard</option>
