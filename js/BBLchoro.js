@@ -1,5 +1,6 @@
 
 svg1=document.getElementById('svg1');
+svg2=document.getElementById('svg2');
 svgAlaska=document.getElementById('svgAlaska');
 svgAlabama=document.getElementById('svgAlabama');
 svgArkansas=document.getElementById('svgArkansas');
@@ -50,62 +51,10 @@ svgWashington=document.getElementById('svgWashington');
 svgWisconsin=document.getElementById('svgWisconsin');
 svgWestvirginia=document.getElementById('svgWestvirginia');
 svgWyoming=document.getElementById('svgWyoming');
-
+svg2.style.display = 'none';
+$('#chorotitle').text("Encounter Choropleth Map");
 //make for each state
-function hideall(){
-	/*
-svgAlaska.style.display = 'none';
-svgAlabama.style.display = 'none';
-svgArkansas.style.display = 'none';
-svgArizona.style.display = 'none';
-svgCalifornia.style.display = 'none';
-svgColorado.style.display = 'none';
-svgHawaii.style.display = 'none';
-svgConnecticut.style.display = 'none';
-svgDelaware.style.display = 'none';
-svgFlorida.style.display = 'none';
-svgGeorgia.style.display = 'none';
-svgIowa.style.display = 'none';
-svgIdaho.style.display = 'none';
-svgIllinois.style.display = 'none';
-svgIndiana.style.display = 'none';
-svgKansas.style.display = 'none';
-svgKentucky.style.display = 'none';
-svgLouisiana.style.display = 'none';
-svgMassachusetts.style.display = 'none';
-svgMaryland.style.display = 'none';
-svgMaine.style.display = 'none';
-svgMichigan.style.display = 'none';
-svgMinnesota.style.display = 'none';
-svgMissouri.style.display = 'none';
-svgMississippi.style.display = 'none';
-svgMontana.style.display = 'none';
-svgNorthcarolina.style.display = 'none';
-svgNorthdakota.style.display = 'none';
-svgNebraska.style.display = 'none';
-svgNewhampshire.style.display = 'none';
-svgNewjersey.style.display = 'none';
-svgNewmexico.style.display = 'none';
-svgNevada.style.display = 'none';
-svgNewyork.style.display = 'none';
-svgOhio.style.display = 'none';
-svgOklahoma.style.display = 'none';
-svgOregon.style.display = 'none';
-svgPennsylvania.style.display = 'none';
-svgRhodeisland.style.display = 'none';
-svgSouthcarolina.style.display = 'none';
-svgSouthdakota.style.display = 'none';
-svgTennessee.style.display = 'none';
-svgTexas.style.display = 'none';
-svgUtah.style.display = 'none';
-svgVirginia.style.display = 'none';
-svgVermont.style.display = 'none';
-svgWashington.style.display = 'none';
-svgWisconsin.style.display = 'none';
-svgWestvirginia.style.display = 'none';
-svgWyoming.style.display = 'none';
-*/
-}
+
 function hideselect(){
 
 $("#AK").css('fill', '');
@@ -173,23 +122,54 @@ function suffix(i) {
 		}
 		return i + "th";
 	}
-hideall();
-function statecount2(){
-  
+//hideall();
+function resetbutton(){
+  hideselect();
+  speciesvar = "all";
+  yearvar2="2018";
+  yearvar="1900";
+  ifstateall = true;
+  stateid = "all";
+  document.getElementById("holder").innerHTML = "";
+  document.getElementById("table3").innerHTML = "";
+  document.getElementById("table2").innerHTML = "";
+  d3.selectAll("#barchart > *").remove(); 
 }
 
-
+function switchmaps(){
+	if(svg2.style.display === 'none'){
+		svg2.style.display = 'block';
+		svg1.style.display = 'none';
+		$('#chorotitle').text("Banding Choropleth Map");
+	}
+	else if(svg1.style.display === 'none'){
+		svg1.style.display = 'block';
+		svg2.style.display = 'none';
+		$('#chorotitle').text("Encounter Choropleth Map");
+	}
+}
 var speciesvar="all"
+
 var yearvar="1900"
 var yearvar2="2018"
 var stateid = "all";
-var ifall = true;
+var ifstateall = true;
 var dict = [];
 var rowCells= new Array();
 var AK=0,AL=0,AR=0,AZ=0,CA=0,CO=0,CT=0,DC=0,DE=0,FL=0,GA=0,GU=0,HI=0,IA=0,ID=0,IL=0,IN=0,KS=0,KY=0,LA=0,MA=0,MD=0,ME=0,MH=0,MI=0,MN=0,MO=0,MS=0,MT=0,NC=0,ND=0,NE=0,NH=0,NJ=0,NM=0,NV=0,NY=0,OH=0,OK=0,OR=0,PA=0,PR=0,PW=0,RI=0,SC=0,SD=0,TN=0,TX=0,UT=0,VA=0,VI=0,VT=0,WA=0,WI=0,WV=0,WY=0;
 
 function countstates(data) {
 	var dict = [];
+	var dictenc = [];
+	var dictstate = [];
+	var bandcnt = [];
+	var year1 = [];
+	var i=0;
+	
+	var speciesvar = $('#myInput').val();
+	if(speciesvar==""){
+		speciesvar="all"
+	}
   var allRows = data.split(/\r?\n|\r/);
  
  
@@ -198,7 +178,7 @@ function countstates(data) {
 	for (var singleRow = 0; singleRow < allRows.length-1; singleRow++) {//allRows.length
   
     rowCells = allRows[singleRow].split(',');
-   if ((rowCells[4].toString()>yearvar)&&(rowCells[4].toString()<yearvar2)&&(rowCells[1].toString()==stateid)){//(rowCells[0].toString()==speciesvar)&&
+   if ((rowCells[4].toString()>=yearvar)&&(rowCells[4].toString()<=yearvar2)&&(rowCells[1].toString()==stateid)){//(rowCells[0].toString()==speciesvar)&&
 	if (dict[rowCells[0].toString()] === undefined){
 		dict[rowCells[0].toString()]=Number(rowCells[5]);
 		}
@@ -207,26 +187,69 @@ function countstates(data) {
 			dict[rowCells[0].toString()]+=Number(rowCells[5]);
 		}
 		
-	ifall=false;
+	ifstateall=false;
    }
 	}
    }
    
-   if (speciesvar!="all"){
+   if (speciesvar!="all"){//if state id is not all && species var is not all then make it the same algorithm as state is all plus algorithm to store specified state info and put in graph
    for (var singleRow = 0; singleRow < allRows.length-1; singleRow++) {//allRows.length
   
     rowCells = allRows[singleRow].split(',');
-   if ((rowCells[0].toString()==speciesvar)&&(rowCells[4].toString()>yearvar)&&(rowCells[4].toString()<yearvar2)&&(rowCells[1].toString()==stateid)){//(rowCells[0].toString()==speciesvar)&&
+   if ((rowCells[0].toString()==speciesvar)&&(rowCells[4].toString()>=yearvar)&&(rowCells[4].toString()<=yearvar2)&&(rowCells[1].toString()==stateid)){//(rowCells[0].toString()==speciesvar)&&
 	if (dict[rowCells[0].toString()] === undefined){
 		dict[rowCells[0].toString()]=Number(rowCells[5]);
+		//bandcnt[i]= rowCells[5];
+		//year1[i]+= rowCells[4].toString();
+		//year1.push(rowCells[4].toString());
+		//i++;
+		
+		year1.push({
+			birds: Number(rowCells[5]), year: rowCells[4],
+			 sortable: true,
+			resizeable: true
+	});
 		}
 
 		if (dict[rowCells[0].toString()] !== undefined){
 			dict[rowCells[0].toString()]+=Number(rowCells[5]);
+			//bandcnt[i]= rowCells[5];
+			//year1[i]+= rowCells[4].toString();
+			//year1.push(rowCells[4].toString());
+			//i++;
+			//console.log(rowCells[5]);
+			year1.push({
+			birds: Number(rowCells[5]), year: rowCells[4],
+			 sortable: true,
+			resizeable: true
+	});
 		}
 		
-	ifall=false;
+		
+		if (dictenc[rowCells[0].toString()] === undefined){
+		dictenc[rowCells[0].toString()]=Number(rowCells[6]);
+		}
+
+		if (dictenc[rowCells[0].toString()] !== undefined){
+			dictenc[rowCells[0].toString()]+=Number(rowCells[6]);
+		}
+	
+		 //for (var rowCell = 0; rowCell < rowCells.length; rowCell++) {
+        //table += rowCells[rowCell]; add in all row cells to results?
+	ifstateall=false;
    }
+      if ((rowCells[0].toString()==speciesvar)&&(rowCells[4].toString()>=yearvar)&&(rowCells[4].toString()<=yearvar2)){
+	  if (dictstate[rowCells[1].toString()] === undefined){
+		dictstate[rowCells[1].toString()]=Number(rowCells[5]);
+		}
+
+		if (dictstate[rowCells[1].toString()] !== undefined){
+			dictstate[rowCells[1].toString()]+=Number(rowCells[5]);
+		}
+   }
+   
+   
+   
 	}
    }
 	
@@ -237,190 +260,14 @@ function countstates(data) {
 	   for (var singleRow = 0; singleRow < allRows.length-1; singleRow++) {//allRows.length
   
     rowCells = allRows[singleRow].split(',');
-   if ((rowCells[4].toString()>yearvar)&&(rowCells[4].toString()<yearvar2)){
-	   var a=rowCells[1].toString()
-   if (a.substring(0,1)=='A'){
-   if ((a=='AK')){
-	AK+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='AR')){
-	AR+=Number(rowCells[5]);
-	 continue;}
-	  if ((a=='AL')){
-	AL+=Number(rowCells[5]);
-	 continue;}
-	  if ((a=='AZ')){
-	AZ+=Number(rowCells[5]);
-	 continue;}}
-   if (a.substring(0,1)=='C'){
-  if ((a=='CA')){
-	CA+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='CO')){
-	CO+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='CT')){
-	CT+=Number(rowCells[5]);
-	 continue;}}
-   if (a.substring(0,1)=='D'){
-  if ((a=='DC')){
-	DC+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='DE')){
-	DE+=Number(rowCells[5]);
-	 continue;}}
-	if ((a=='FL')){
-	FL+=Number(rowCells[5]);
-	 continue;}
-	 if (a.substring(0,1)=='G'){
-	 if ((a=='GA')){
-	GA+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='GU')){
-	GU+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='HI')){
-	HI+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='I'){
-	 if ((a=='IA')){
-	IA+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='ID')){
-	ID+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='IL')){
-	IL+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='IN')){
-	IN+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='K'){
-	 if ((a=='KS')){
-	KS+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='KY')){
-	KY+=Number(rowCells[5]);
-	 continue;}}
-	 if ((a=='LA')){
-	LA+=Number(rowCells[5]);
-	 continue;}
-	 if (a.substring(0,1)=='M'){
-	 if ((a=='MA')){
-	MA+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MD')){
-	MD+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='ME')){
-	ME+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MH')){
-	MH+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MI')){
-	MI+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MN')){
-	MN+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MO')){
-	MO+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MS')){
-	MS+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MT')){
-	MT+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='N'){
-	 if ((a=='NC')){
-	NC+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='ND')){
-	ND+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NE')){
-	NE+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NH')){
-	NH+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NJ')){
-	NJ+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NM')){
-	NM+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NV')){
-	NV+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='NY')){
-	NY+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='O'){
-	 if ((a=='OH')){
-	OH+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='OK')){
-	OK+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='OR')){
-	OR+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='P'){
-	 if ((a=='PA')){
-	PA+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='PR')){
-	PR+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='PW')){
-	PW+=Number(rowCells[5]);
-	 continue;}}
-	 if ((a=='RI')){
-	RI+=Number(rowCells[5]);
-	continue;}
-	if (a.substring(0,1)=='S'){
-	 if ((a=='SC')){
-	SC+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='SD')){
-	SD+=Number(rowCells[5]);
-	continue;}}
-	if (a.substring(0,1)=='T'){
-	 if ((a=='TN')){
-	TN+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='TX')){
-	TX+=Number(rowCells[5]);
-	continue;}}
-	 if ((a=='UT')){
-	UT+=Number(rowCells[5]);
-	 continue;}
-	if (a.substring(0,1)=='V'){
-	 if ((a=='VA')){
-	VA+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='VI')){
-	VI+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='VT')){
-	VT+=Number(rowCells[5]);
-	continue;}}
-	if (a.substring(0,1)=='W'){
-	 if ((a=='WA')){
-	WA+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='WI')){
-	WI+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='WV')){
-	WV+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='WY')){
-	WY+=Number(rowCells[5]);
-	continue;}}
+   if ((rowCells[4].toString()>=yearvar)&&(rowCells[4].toString()<=yearvar2)){
+if (dictstate[rowCells[1].toString()] === undefined){
+		dictstate[rowCells[1].toString()]=Number(rowCells[5]);
+		}
+
+		if (dictstate[rowCells[1].toString()] !== undefined){
+			dictstate[rowCells[1].toString()]+=Number(rowCells[5]);
+		}
    }
    }
    }
@@ -429,190 +276,14 @@ function countstates(data) {
 	   for (var singleRow = 0; singleRow < allRows.length-1; singleRow++) {//allRows.length
   
     rowCells = allRows[singleRow].split(',');
-   if ((rowCells[0].toString()==speciesvar)&&(rowCells[0].toString()==speciesvar)&&(rowCells[4].toString()>yearvar)&&(rowCells[4].toString()<yearvar2)){
-	   var a=rowCells[1].toString()
-   if (a.substring(0,1)=='A'){
-   if ((a=='AK')){
-	AK+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='AR')){
-	AR+=Number(rowCells[5]);
-	 continue;}
-	  if ((a=='AL')){
-	AL+=Number(rowCells[5]);
-	 continue;}
-	  if ((a=='AZ')){
-	AZ+=Number(rowCells[5]);
-	 continue;}}
-   if (a.substring(0,1)=='C'){
-  if ((a=='CA')){
-	CA+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='CO')){
-	CO+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='CT')){
-	CT+=Number(rowCells[5]);
-	 continue;}}
-   if (a.substring(0,1)=='D'){
-  if ((a=='DC')){
-	DC+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='DE')){
-	DE+=Number(rowCells[5]);
-	 continue;}}
-	if ((a=='FL')){
-	FL+=Number(rowCells[5]);
-	 continue;}
-	 if (a.substring(0,1)=='G'){
-	 if ((a=='GA')){
-	GA+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='GU')){
-	GU+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='HI')){
-	HI+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='I'){
-	 if ((a=='IA')){
-	IA+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='ID')){
-	ID+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='IL')){
-	IL+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='IN')){
-	IN+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='K'){
-	 if ((a=='KS')){
-	KS+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='KY')){
-	KY+=Number(rowCells[5]);
-	 continue;}}
-	 if ((a=='LA')){
-	LA+=Number(rowCells[5]);
-	 continue;}
-	 if (a.substring(0,1)=='M'){
-	 if ((a=='MA')){
-	MA+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MD')){
-	MD+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='ME')){
-	ME+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MH')){
-	MH+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MI')){
-	MI+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MN')){
-	MN+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MO')){
-	MO+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MS')){
-	MS+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='MT')){
-	MT+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='N'){
-	 if ((a=='NC')){
-	NC+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='ND')){
-	ND+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NE')){
-	NE+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NH')){
-	NH+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NJ')){
-	NJ+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NM')){
-	NM+=Number(rowCells[5]);
-	 continue;}
-	 if ((a=='NV')){
-	NV+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='NY')){
-	NY+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='O'){
-	 if ((a=='OH')){
-	OH+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='OK')){
-	OK+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='OR')){
-	OR+=Number(rowCells[5]);
-	 continue;}}
-	 if (a.substring(0,1)=='P'){
-	 if ((a=='PA')){
-	PA+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='PR')){
-	PR+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='PW')){
-	PW+=Number(rowCells[5]);
-	 continue;}}
-	 if ((a=='RI')){
-	RI+=Number(rowCells[5]);
-	continue;}
-	if (a.substring(0,1)=='S'){
-	 if ((a=='SC')){
-	SC+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='SD')){
-	SD+=Number(rowCells[5]);
-	continue;}}
-	if (a.substring(0,1)=='T'){
-	 if ((a=='TN')){
-	TN+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='TX')){
-	TX+=Number(rowCells[5]);
-	continue;}}
-	 if ((a=='UT')){
-	UT+=Number(rowCells[5]);
-	 continue;}
-	if (a.substring(0,1)=='V'){
-	 if ((a=='VA')){
-	VA+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='VI')){
-	VI+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='VT')){
-	VT+=Number(rowCells[5]);
-	continue;}}
-	if (a.substring(0,1)=='W'){
-	 if ((a=='WA')){
-	WA+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='WI')){
-	WI+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='WV')){
-	WV+=Number(rowCells[5]);
-	continue;}
-	 if ((a=='WY')){
-	WY+=Number(rowCells[5]);
-	continue;}}
+   if ((rowCells[0].toString()==speciesvar)&&(rowCells[0].toString()==speciesvar)&&(rowCells[4].toString()>=yearvar)&&(rowCells[4].toString()<=yearvar2)){
+	  if (dictstate[rowCells[1].toString()] === undefined){
+		dictstate[rowCells[1].toString()]=Number(rowCells[5]);
+		}
+
+		if (dictstate[rowCells[1].toString()] !== undefined){
+			dictstate[rowCells[1].toString()]+=Number(rowCells[5]);
+		}
    }
 	   }
 	  }
@@ -620,9 +291,9 @@ function countstates(data) {
    
    
    
-  if(ifall==true){
+  if(ifstateall==true){
    var table = '<table>';
-   table += '<thead>';
+	  table += '<thead>';
    table += '<tr>';
    table += '<th>';
    table+= "State";
@@ -632,507 +303,91 @@ function countstates(data) {
    table += '</th>';
    table += '</tr>';
    table += '</thead>';
+  Object.keys(dictstate).forEach(function(key) {
+	  
    
    table += '<tbody>';
    table += '<tr>';
    table += '<th>';
-   table+= "AL";
+   table+= key;
    table += '</th>';
    table += '<th>';
-   table+= AL;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "AK";
-   table += '</th>';
-   table += '<th>';
-   table+= AK;
+   table+= dictstate[key];
    table += '</th>';
    table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "AZ";
-   table += '</th>';
-   table += '<th>';
-   table+= AZ;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "AR";
-   table += '</th>';
-   table += '<th>';
-   table+= AR;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "CA";
-   table += '</th>';
-   table += '<th>';
-   table+= CA;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "CO";
-   table += '</th>';
-   table += '<th>';
-   table+= CO;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "CT";
-   table += '</th>';
-   table += '<th>';
-   table+= CT;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "DE";
-   table += '</th>';
-   table += '<th>';
-   table+= DE;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "FL";
-   table += '</th>';
-   table += '<th>';
-   table+= FL;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "GA";
-   table += '</th>';
-   table += '<th>';
-   table+= GA;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "HI";
-   table += '</th>';
-   table += '<th>';
-   table+= HI;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "ID";
-   table += '</th>';
-   table += '<th>';
-   table+= ID;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "IL";
-   table += '</th>';
-   table += '<th>';
-   table+= IL;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "IN";
-   table += '</th>';
-   table += '<th>';
-   table+= IN;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "IA";
-   table += '</th>';
-   table += '<th>';
-   table+= IA;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "KS";
-   table += '</th>';
-   table += '<th>';
-   table+= KS;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "KY";
-   table += '</th>';
-   table += '<th>';
-   table+= KY;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "LA";
-   table += '</th>';
-   table += '<th>';
-   table+= LA;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "ME";
-   table += '</th>';
-   table += '<th>';
-   table+= ME;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "MD";
-   table += '</th>';
-   table += '<th>';
-   table+= MD;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "MA";
-   table += '</th>';
-   table += '<th>';
-   table+= MA;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "MI";
-   table += '</th>';
-   table += '<th>';
-   table+= MI;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "MN";
-   table += '</th>';
-   table += '<th>';
-   table+= MN;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "MS";
-   table += '</th>';
-   table += '<th>';
-   table+= MS;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "MO";
-   table += '</th>';
-   table += '<th>';
-   table+= MO;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "MT";
-   table += '</th>';
-   table += '<th>';
-   table+= MT;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "NE";
-   table += '</th>';
-   table += '<th>';
-   table+= NE;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "NV";
-   table += '</th>';
-   table += '<th>';
-   table+= NV;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "NH";
-   table += '</th>';
-   table += '<th>';
-   table+= NH;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "NJ";
-   table += '</th>';
-   table += '<th>';
-   table+= NJ;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "NM";
-   table += '</th>';
-   table += '<th>';
-   table+= NM;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "NY";
-   table += '</th>';
-   table += '<th>';
-   table+= NY;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "NC";
-   table += '</th>';
-   table += '<th>';
-   table+= NC;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "ND";
-   table += '</th>';
-   table += '<th>';
-   table+= ND;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "OH";
-   table += '</th>';
-   table += '<th>';
-   table+= OH;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "OK";
-   table += '</th>';
-   table += '<th>';
-   table+= OK;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "OR";
-   table += '</th>';
-   table += '<th>';
-   table+= OR;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "PA";
-   table += '</th>';
-   table += '<th>';
-   table+= PA;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "RI";
-   table += '</th>';
-   table += '<th>';
-   table+= RI;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "SC";
-   table += '</th>';
-   table += '<th>';
-   table+= SC;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "SD";
-   table += '</th>';
-   table += '<th>';
-   table+= SD;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "TN";
-   table += '</th>';
-   table += '<th>';
-   table+= TN;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "TX";
-   table += '</th>';
-   table += '<th>';
-   table+= TX;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "UT";
-   table += '</th>';
-   table += '<th>';
-   table+= UT;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "VT";
-   table += '</th>';
-   table += '<th>';
-   table+= VT;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "VA";
-   table += '</th>';
-   table += '<th>';
-   table+= VA;
-   table += '</th>';
-   table += '</tr>';
-   
-   table += '<tr>';
-   table += '<th>';
-   table+= "WA";
-   table += '</th>';
-   table += '<th>';
-   table+= WA;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "WV";
-   table += '</th>';
-   table += '<th>';
-   table+= WV;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "WI";
-   table += '</th>';
-   table += '<th>';
-   table+= WI;
-   table += '</th>';
-   table += '</tr>';
-      
-   table += '<tr>';
-   table += '<th>';
-   table+= "WY";
-   table += '</th>';
-   table += '<th>';
-   table+= WY;
-   table += '</th>';
-   table += '</tr>';
-   
-   
-   
-   table += '</tbody>';
-   table+="</table>";
- /*
-      table += '<thead>';
-      table += '<tr>';
-
-     table += 'State';
- table += '</thead>';
-	   table += '</tr>';
-      table += '<tbody>';
-   table += '<td>';
-   table += 'California';
-   table += '<th>';
-   
-        table += CA;
-		table += '</th>';
-		table += '</td>';
-
-
-      
-     
-   
-		table += '<td>';
-        table += CO;
-		table += '</td>';
-		table += '<td>';
-        table += VA;
-		table += '</td>';
-		table += '<td>';
-        table += WV;
-		table += '</td>';
-		table += '<td>';
-        table += WA;
-        table += '</td>';
-		
-  table += '</tbody>';
-  table += '</table>';
-  */
- // $('body').append(table);
+    //console.log(key, dictstate[key]);
+});
   document.getElementById('table2').innerHTML = table
   }
-  if(ifall==false){
-	  var table = '<table>';
+  if(ifstateall==false){//specify stateid
+    if(speciesvar!="all"){
+	  var table2 = '<table>';
+	   table2 += '<th>';
+   table2+= speciesvar;
+   table2+= " - ";
+   table2+= stateid;
+   table2 += '</th>';
+   table2 += '<th>';
+   
+   Object.keys(dict).forEach(function(key) {
+   table2 += '<tbody>';
+   table2 += '<tr>';
+   table2 += '<th>';
+   table2+= "Total: ";
+   table2+= dict[key];
+    table2+= " birds banded from "+yearvar+" to "+yearvar2;
+   table2 += '</th>';
+   table2 += '</tr>';
+});
+  Object.keys(dict).forEach(function(key) {
+   table2 += '<tbody>';
+   table2 += '<tr>';
+   table2 += '<th>';
+   table2+= "Total: ";
+   table2+= dictenc[key];
+    table2+= " birds encountered from "+yearvar+" to "+yearvar2;
+   table2 += '</th>';
+   table2 += '</tr>';
+});
+   table2 += '</th>';
+	  table2+="</table>";
+	  
+	 
+  var table = '<table>';
 	  table += '<thead>';
    table += '<tr>';
    table += '<th>';
    table+= "State";
+   table += '</th>';
+   table += '<th>';
+   table+= "Value";
+   table += '</th>';
+   table += '</tr>';
+   table += '</thead>';
+  Object.keys(dictstate).forEach(function(key) {
+	  
+   
+   table += '<tbody>';
+   table += '<tr>';
+   table += '<th>';
+   table+= key;
+   table += '</th>';
+   table += '<th>';
+   table+= dictstate[key];
+   table += '</th>';
+   table += '</tr>';
+    //console.log(key, dictstate[key]);
+});
+document.getElementById('table3').innerHTML = table2
+//console.log(year1[1]);
+drawbarchart(year1);
+	}
+	if(speciesvar=="all"){
+	  var table = '<table>';
+	  table += '<thead>';
+   table += '<tr>';
+   table += '<th>';
+   table+= "Species";
    table += '</th>';
    table += '<th>';
    table+= "Value";
@@ -1153,10 +408,12 @@ function countstates(data) {
    table += '</tr>';
     //console.log(key, dict[key]);
 });
-
+	}
       table += '</tbody>';
    table+="</table>";
+  
 document.getElementById('table2').innerHTML = table
+
   }
   //Object.keys(dict).forEach(function(key) {
 	  
@@ -1165,9 +422,157 @@ AK=0,AL=0,AR=0,AZ=0,CA=0,CO=0,CT=0,DC=0,DE=0,FL=0,GA=0,GU=0,HI=0,IA=0,ID=0,IL=0,
 }
 
 
-function successFunction(data) {//function puts all rows in csv into table
+function drawbarchart(data) {
+document.getElementById("holder").innerHTML = "";
+d3.selectAll("#barchart > *").remove(); 
 
+/*
+var values = [
+  {birds: 32, year: 'January'},
+  {birds: 38, year: 'February'},
+  {birds: 47, year: 'March'},
+  {birds: 59, year: 'April'},
+  {birds: 70, year: 'May'},
+  {birds: 80, year: 'June'},
+  {birds: 84, year: 'July'},
+  {birds: 83, year: 'Auguest'},
+  {birds: 76, year: 'September'},
+  {birds: 64, year: 'October'},
+  {birds: 49, year: 'November'},
+  {birds: 37, year: 'December'}
+];
+*/
+/*
+var values = [
+  {birds: data[0], year: data2[0]},
+  {birds: data[1], year: data2[1]},
+  {birds: data[2], year: data2[2]},
+  {birds: 59, year: 'April'},
+  {birds: 70, year: 'May'},
+  {birds: 80, year: 'June'},
+  {birds: 84, year: 'July'},
+  {birds: 83, year: 'Auguest'},
+  {birds: 76, year: 'September'},
+  {birds: 64, year: 'October'},
+  {birds: 49, year: 'November'},
+  {birds: 37, year: 'December'}
+];*/
+var values=[];
+/*
+for (var j = 0; j < data.length; j++) {//get rid of undefined in year (its added with the year1 array +=)
+		values.push({
+			birds: data[j], year: data2[j],
+			 sortable: true,
+			resizeable: true
+	});
+}*/
+values=data;
+values.sort(function(a, b){
+    return a.year - b.year;
+});
+
+/*
+a=data[0]
+b=data[1]
+c=data[2]
+console.log(data[1]);
+var values = [
+  {a},
+  {b},
+  {c}
+];
+*/
+var years = values.map(function(t) {
+  return t.year
+});
+
+var margin = {top: 5, right: 5, bottom: 50, left: 50};
+// here, we want the full chart to be 700x200, so we determine
+// the width and height by subtracting the margins from those values
+var fullWidth = 1100;
+var fullHeight = 250;
+// the width and height values will be used in the ranges of our scales
+var width = fullWidth - margin.right - margin.left;
+var height = fullHeight - margin.top - margin.bottom;
+var svg = d3.select('#holder').append('svg:svg')
+  .attr('width', fullWidth)
+  .attr('height', fullHeight)
+  .attr('id', "barchart")
+  // this g is where the bar chart will be drawn
+  .append('g')
+    // translate it to leave room for the left and top margins
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+// x value determined by year
+var yearScale = d3.scaleBand()
+  .domain(years)
+  .range([0, width])
+  .paddingInner(0.1);
+
+// the width of the bars is determined by the scale
+var bandwidth = yearScale.bandwidth();
+
+
+
+// y value determined by birds
+var maxTemp = d3.max(values, function(d) { return d.birds; });
+//var maxTemp = Number(valuessorted[0]);
+var tempScale = d3.scaleLinear()
+  .domain([0, maxTemp])
+  .range([height, 0])
+  .nice();
+
+
+var xAxis = d3.axisBottom(yearScale);
+var yAxis = d3.axisLeft(tempScale);
+
+// draw the axes
+svg.append('g')
+  .classed('x axis', true)
+  .attr('transform', 'translate(0,' + height + ')')
+  .call(xAxis)
+  .selectAll("text")
+  //
+  .attr("transform","translate(12,20) rotate(90)");
+ // .attr('transform', 'translate(2,5)')
   
+var yAxisEle = svg.append('g')
+  .classed('y axis', true)
+  .call(yAxis);
+
+// add a label to the yAxis
+var yText = yAxisEle.append('text')
+  .attr('transform', 'rotate(-90)translate(-' + height/2 + ',0)')
+  .style('text-anchor', 'middle')
+  .style('fill', 'black')
+  .attr('dy', '-2.8em')
+  .style('font-size', 14)
+  .text('# of birds banded');
+
+var barHolder = svg.append('g')
+  .classed('bar-holder', true);
+
+// draw the bars
+var bars = barHolder.selectAll('rect.bar')
+    .data(values)
+  .enter().append('rect')
+    .classed('bar', true)
+    .attr('x', function(d, i) {
+      // the x value is determined using the
+      // year of the datum
+      return yearScale(d.year)
+    })
+    .attr('width', bandwidth)
+    .attr('y', function(d) {
+      // the y position is determined by the datum's temp
+      // this value is the top edge of the rectangle
+      return tempScale(d.birds);
+    })
+    .attr('height', function(d) {
+      // the bar's height should align it with the base of the chart (y=0)
+      return height - tempScale(d.birds);
+    });
+
 }
 function autocomplete(inp, arr) {
   /*the autocomplete function takes two arguments,
@@ -1265,8 +670,8 @@ document.addEventListener("click", function (e) {
     closeAllLists(e.target);
 });
 }
-var countries = ["Mallard","Northern Pintail","Red-winged Blackbird","Snowy Egret","European Starling","Wilson's Warbler","Cassin's Finch","Small Canada Goose","House Finch","Black-capped Chickadee","Spotted Towhee","Canada Goose","Lark Bunting","Band-tailed Pigeon","Golden Eagle","Williamson's Sapsucker","Gray-crowned Rosy-Finch","Green-winged Teal","Gadwall","California Gull","Ferruginous Hawk","Vesper Sparrow","Evening Grosbeak","Pine Siskin","Tree Swallow","American Goldfinch","American Crow","Gray Jay","American Kestrel","Cliff Swallow","Ruby-crowned Kinglet","Oregon Junco","Swainson's Thrush","Steller's Jay","White-crowned Sparrow","Broad-tailed Hummingbird","Brown-headed Cowbird","Brown-capped Rosy-Finch","Red-naped Sapsucker","Audubon's Warbler","Purple Martin","Rufous Hummingbird","Gray Catbird","Flammulated Owl","Orange-crowned Warbler","Barn Swallow","Gray-headed Junco","Western Bluebird","Black-billed Magpie","Blue-winged Teal","Ring-billed Gull","American Robin","Clark's Nutcracker","Unidentified Teal","Red-shafted Flicker","American Dipper","MacGillivray's Warbler","Prairie Falcon","Chipping Sparrow","Mountain Chickadee","House Sparrow","Lincoln's Sparrow","Warbling Vireo","Song Sparrow","Loggerhead Shrike","Mourning Dove","Red-eyed Vireo","Hammond's Flycatcher","Yellow Warbler","Green-tailed Towhee","Gambel's White-crowned Sparrow","Western Wood-Pewee","Black-throated Sparrow","Black-chinned Hummingbird","Mountain Bluebird","Myrtle Warbler","Hermit Thrush","American White Pelican","Great Horned Owl","Barn Owl","American Wigeon","Least Sandpiper","Common Grackle","Cinnamon Teal","American Coot","Yellow-headed Blackbird","Dusky Flycatcher","Townsend's Warbler","White-winged Junco","Northern Cardinal","Bald Eagle","Brewer's Blackbird","Lesser Scaup","Field Sparrow","Burrowing Owl","Blackpoll Warbler","Western Flycatcher","Brown Creeper","Mountain White-crowned Sparrow","Virginia's Warbler","Northern Saw-whet Owl","Horned Lark","Sora","Black Rosy-Finch","Violet-green Swallow","Solitary Vireo","Plumbeous Vireo","Swainson's Hawk","Redhead","Mountain Plover","Black-throated Gray Warbler","Northern Parula","Pygmy Nuthatch","Savannah Sparrow","Red-tailed Hawk","Black-crowned Night-Heron","White-breasted Nuthatch","Brewer's Sparrow","Traill's Flycatcher","Downy Woodpecker","Northern Shrike","McCown's Longspur","Say's Phoebe","Brown Thrasher","Red-breasted Nuthatch","House Wren","Western Tanager","Common Yellowthroat","Blue Jay","Juniper Titmouse","Black-headed Grosbeak","Long-billed Dowitcher","Cordilleran Flycatcher","Merlin","Killdeer","Lazuli Bunting","American Tree Sparrow","Western Meadowlark","Western Scrub-Jay","Red Crossbill","Cassin's Vireo","White-faced Ibis","Bushtit","Calliope Hummingbird","Indigo Bunting","Long-eared Owl"];
-autocomplete(document.getElementById("myInput"), countries);
+var specieslist = ["Mallard","Northern Pintail","Red-winged Blackbird","Snowy Egret","European Starling","Wilson&#39;s Warbler","Cassin&#39;s Finch","Small Canada Goose","House Finch","Black-capped Chickadee","Spotted Towhee","Canada Goose","Lark Bunting","Band-tailed Pigeon","Golden Eagle","Williamson&#39;s Sapsucker","Gray-crowned Rosy-Finch","Green-winged Teal","Gadwall","California Gull","Ferruginous Hawk","Vesper Sparrow","Evening Grosbeak","Pine Siskin","Tree Swallow","American Goldfinch","American Crow","Gray Jay","American Kestrel","Cliff Swallow","Ruby-crowned Kinglet","Oregon Junco","Swainson&#39;s Thrush","Steller&#39;s Jay","White-crowned Sparrow","Broad-tailed Hummingbird","Brown-headed Cowbird","Brown-capped Rosy-Finch","Red-naped Sapsucker","Audubon&#39;s Warbler","Purple Martin","Rufous Hummingbird","Gray Catbird","Flammulated Owl","Orange-crowned Warbler","Barn Swallow","Gray-headed Junco","Western Bluebird","Black-billed Magpie","Blue-winged Teal","Ring-billed Gull","American Robin","Clark&#39;s Nutcracker","Unidentified Teal","Red-shafted Flicker","American Dipper","MacGillivray&#39;s Warbler","Prairie Falcon","Chipping Sparrow","Mountain Chickadee","House Sparrow","Lincoln&#39;s Sparrow","Warbling Vireo","Song Sparrow","Loggerhead Shrike","Mourning Dove","Red-eyed Vireo","Hammond&#39;s Flycatcher","Yellow Warbler","Green-tailed Towhee","Gambel&#39;s White-crowned Sparrow","Western Wood-Pewee","Black-throated Sparrow","Black-chinned Hummingbird","Mountain Bluebird","Myrtle Warbler","Hermit Thrush","American White Pelican","Great Horned Owl","Barn Owl","American Wigeon","Least Sandpiper","Common Grackle","Cinnamon Teal","American Coot","Yellow-headed Blackbird","Dusky Flycatcher","Townsend&#39;s Warbler","White-winged Junco","Northern Cardinal","Bald Eagle","Brewer&#39;s Blackbird","Lesser Scaup","Field Sparrow","Burrowing Owl","Blackpoll Warbler","Western Flycatcher","Brown Creeper","Mountain White-crowned Sparrow","Virginia&#39;s Warbler","Northern Saw-whet Owl","Horned Lark","Sora","Black Rosy-Finch","Violet-green Swallow","Solitary Vireo","Plumbeous Vireo","Swainson&#39;s Hawk","Redhead","Mountain Plover","Black-throated Gray Warbler","Northern Parula","Pygmy Nuthatch","Savannah Sparrow","Red-tailed Hawk","Black-crowned Night-Heron","White-breasted Nuthatch","Brewer&#39;s Sparrow","Traill&#39;s Flycatcher","Downy Woodpecker","Northern Shrike","McCown&#39;s Longspur","Say&#39;s Phoebe","Brown Thrasher","Red-breasted Nuthatch","House Wren","Western Tanager","Common Yellowthroat","Blue Jay","Juniper Titmouse","Black-headed Grosbeak","Long-billed Dowitcher","Cordilleran Flycatcher","Merlin","Killdeer","Lazuli Bunting","American Tree Sparrow","Western Meadowlark","Western Scrub-Jay","Red Crossbill","Cassin&#39;s Vireo","White-faced Ibis","Bushtit","Calliope Hummingbird","Indigo Bunting","Long-eared Owl","Sage Thrasher","White-throated","Sparrow","Slate-colored Junco","Unidentified Dark-eyed Junco","Olive-sided Flycatcher","Northern Waterthrush","Willow Flycatcher","Bullock&#39;s Oriole","Lesser Yellowlegs","Peregrine Falcon","Cassin&#39;s Sparrow","Double-crested Cormorant","Orchard Oriole","Bewick&#39;s Wren","Chestnut-sided Warbler","Black Swift","Ruddy Duck","Northern Harrier","Unidentified Empidonax","Lesser Goldfinch","Hairy Woodpecker","American Three-toed Woodpecker","Blue Grosbeak","Yellow-breasted Chat","Lark Sparrow","Rock Wren","Townsend&#39;s Solitaire","Sandhill Crane","Clay-colored Sparrow","Western Kingbird","Pine Grosbeak","Pied-billed Grebe","Black-and-white Warbler","Northern Goshawk","Swamp Sparrow","Cedar Waxwing","Costa&#39;s Hummingbird","Osprey","Gray Flycatcher","Sharp-shinned Hawk","Canvasback","Veery","Western Screech-Owl","Harris&#39;s Sparrow","Common Merganser","Ash-throated Flycatcher","Ring-necked Duck","Northern Shoveler","Common Raven","American Pipit","Magnolia Warbler","Mexican Spotted Owl","Western Grebe","Grasshopper Sparrow","Nashville Warbler","Flicker Intergrade","Golden-winged Warbler","Yellow-shafted Flicker","Northern Pygmy-Owl","Fox Sparrow","Wood Duck","Eastern Screech-Owl","Winter Wren","Solitary Sandpiper","American Redstart","Dickcissel","Cattle Egret","Least Flycatcher","Eastern Kingbird","Cooper&#39;s Hawk","Baltimore Oriole","Baltimore X Bullock&#39;s Oriole Hybrid","Pine Warbler","Blue-gray Gnatcatcher","Long-billed Curlew","Scarlet Tanager","Semipalmated Sandpiper","Black-throated Blue Warbler","Eastern Towhee","Franklin&#39;s Gull","Bohemian Waxwing","Eurasian Collared-Dove","Marsh Wren","Tennessee Warbler","Golden-crowned Kinglet","Yellow-bellied Sapsucker","Spotted Sandpiper","Alder Flycatcher","Gray-cheeked Thrush","Rose-breasted Grosbeak","Hybrid Passerine","Canyon Towhee","Western Palm Warbler","Rough-legged Hawk","Common Poorwill","Mexican Duck","Chihuahuan Raven","Bell&#39;s Vireo","Baird&#39;s Sandpiper","Western Sandpiper","Common Redpoll","Boreal Owl","Wilson&#39;s Snipe","Blue-headed Vireo","Bufflehead","Common Nighthawk","White-eyed Vireo","Wood Thrush","American Black Duck","Canada Warbler","Eastern Phoebe","Canyon Wren","Great Crested Flycatcher","Lewis&#39;s Woodpecker","Blue-winged Warbler","Eared Grebe","American Avocet","Interior Least Tern","Carolina Wren","Ladder-backed Woodpecker","Philadelphia Vireo","Northern Mockingbird","Painted Bunting","Purple Finch","Virginia Rail","Red-headed Woodpecker","Common Goldeneye","Hooded Merganser","Unidentified Rufous-sided Towhee","Cassin&#39;s Kingbird","Magnificent Hummingbird","Sprague&#39;s Pipit","Cape May Warbler","Semipalmated Plover","Northern Rough-winged Swallow","Bank Swallow","Yellow-billed Cuckoo","Belted Kingfisher","Black-throated Green Warbler","Pacific Wren","Ovenbird","Black Phoebe","Eastern White-crowned Sparrow","White-throated Swift","Ruby-throated Hummingbird","Golden-crowned Sparrow","Summer Tanager","Black-billed Cuckoo","Hooded Warbler","Scott&#39;s Oriole","Great Blue Heron","Unknown Yellow-rumped Warbler","Piping Plover","Gray Vireo","Wilson&#39;s Phalarope","Chestnut-collared Longspur","Indigo X Lazuli Bunting Hybrid","Harlan&#39;s Hawk","Forster&#39;s Tern","American Bittern","Yellow-green Vireo","Greater Yellowlegs","Worm-eating Warbler","Mourning Warbler","Yellow-throated Vireo","Whiskered Screech-Owl","Eastern Wood-Pewee","Curve-billed Thrasher","Greater White-fronted Goose","Blackburnian Warbler","Prothonotary Warbler","Pinyon Jay","Common Loon","Bay-breasted Warbler","Connecticut Warbler","Lesser Snow Goose","Upland Sandpiper","Red-necked Phalarope","Mississippi Kite","Unidentified Hummingbird","Yellow-eyed Junco","Great Egret","Broad-winged Hawk","Mallard X American Black Duck Hybrid","Pectoral Sandpiper","Grace&#39;s Warbler","Eastern Bluebird","Herring Gull","Lapland Longspur","Phainopepla","Yellow-bellied Flycatcher","Red-bellied Woodpecker","Great-tailed Grackle","Prairie Warbler","Short-eared Owl","Baird&#39;s Sparrow","Kentucky Warbler","Chimney Swift","Snowy Plover","Hutton&#39;s Vireo","Horned Grebe","White-winged Crossbill","White-eared Hummingbird","Stilt Sandpiper","Gyrfalcon","Bobolink","Red-shouldered Hawk","Willet","Unspecified Sage Sparrow","Sanderling","Black-bellied Plover","Yellow-throated Warbler","Varied Thrush","Hepatic Tanager","Turkey Vulture","Pacific-slope Flycatcher","Harris&#39;s Hawk","White-rumped Sandpiper","Hybrid Chickadee","American Golden-Plover","Other Hybrid Duck","Acadian Flycatcher","Anna&#39;s Hummingbird","White-winged Dove","Black-necked Stilt","Whooping Crane","Large Canada Goose","Snow X Blue Goose Intergrade","Blue Goose","Trumpeter Swan","Red-cockaded Woodpecker","Ross&#39;s Goose","Snow X Ross&#39;s Goose Hybrid","Whistling Swan","Glaucous-winged Gull","Greater Snow Goose","Unidentified Gull","Broad-billed Hummingbird","Rusty Blackbird"];
+autocomplete(document.getElementById("myInput"), specieslist);
 
 
 
