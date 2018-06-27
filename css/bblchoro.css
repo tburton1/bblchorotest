@@ -1,5 +1,4 @@
 
-
 * { box-sizing: border-box; }
 body {
   font: 16px Arial; 
@@ -92,6 +91,15 @@ input[type=submit] {
 #chorotitle{
 
 }
+#chorotitle2{
+font-size:32px;
+font-weight: bold;
+float: right;
+margin-left: 0%;
+  margin-right:15%;
+  margin-top: 5%;
+  margin-bottom: 0%;
+}
 
 #hsmap-container path:hover, circle:hover {
   stroke: #002868 !important;
@@ -155,7 +163,7 @@ td.indented
 .table2{
   border-collapse: collapse;
   position:absolute;
-  width: 40%;
+  width: 30%;
   height:60em;  
   table-layout: fixed;
   overflow: scroll;
