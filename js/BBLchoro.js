@@ -881,7 +881,7 @@ document.getElementById('CA').style.fill = '#002868';
  }
 /*
 $.ajax({
-  url: 'https://webdev.er.usgs.gov/BBL/int_maps/pages/bbldata.csv',
+  url: '/bbldata.csv',
   dataType: 'text',
 }).done(successFunction);
 */
