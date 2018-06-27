@@ -88,6 +88,18 @@ input[type=submit] {
   height: 350px;
   width: 550px;
 }
+#canada_div path:hover, circle:hover {
+  stroke: #002868 !important;
+  stroke-width:2px;
+  stroke-linejoin: round;
+  fill: #002868 !important;
+  cursor: pointer;
+  float: left;
+  display: block;
+  position: relative;
+  height: 350px;
+  width: 550px;
+}
 #chorotitle{
 
 }
