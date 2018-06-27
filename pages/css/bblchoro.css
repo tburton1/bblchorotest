@@ -1,3 +1,56 @@
+
+* { box-sizing: border-box; }
+body {
+  font: 16px Arial; 
+}
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+}
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+}
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff; 
+  border-bottom: 1px solid #d4d4d4; 
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9; 
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important; 
+  color: #ffffff; 
+}
+
+
+
 #us-map{
   display: block;
   position: absolute;
@@ -22,6 +75,30 @@
   position: relative;
   height: 350px;
   width: 550px;
+}
+#state_div2 path:hover, circle:hover {
+  stroke: #002868 !important;
+  stroke-width:2px;
+  stroke-linejoin: round;
+  fill: #002868 !important;
+  cursor: pointer;
+  float: left;
+  display: block;
+  position: relative;
+  height: 350px;
+  width: 550px;
+}
+#chorotitle{
+
+}
+#chorotitle2{
+font-size:32px;
+font-weight: bold;
+float: right;
+margin-left: 0%;
+  margin-right:15%;
+  margin-top: 5%;
+  margin-bottom: 0%;
 }
 
 #hsmap-container path:hover, circle:hover {
@@ -78,13 +155,18 @@ td.indented
   width:50%;
   display:inline-block;
 }
+.statesmap2{
+  float:left;
+  width:50%;
+  display:inline-block;
+}
 .table2{
   border-collapse: collapse;
   position:absolute;
-  width: 40%;
-  height: 0%;
+  width: 30%;
+  height:60em;  
   table-layout: fixed;
-  overflow: hidden;
+  overflow: scroll;
   float: right;
   position:inherit;
   margin-left: 0%;
@@ -94,18 +176,18 @@ td.indented
 	
 	
 }
-.table1{
+.table3{
   font-family: Arial Narrow, Arial, sans-serif;
   border-collapse: collapse;
-  width: 25%;
+  width: 35%;
   height: 20%;
   table-layout: fixed;
   overflow: hidden;
-  float: right;
+  float: left;
   position: absolute;
-  margin-left: 40%;
-  margin-right:0%;
-  margin-top: 25%;
+  margin-left: 0%;
+  margin-right:60%;
+  margin-top: 43%;
 }
 
 .texas{float: right;display:inline-block; width:50%;height:60%;margin-right:40%;margin-bottom:5%;}
