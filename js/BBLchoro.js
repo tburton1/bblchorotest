@@ -881,7 +881,7 @@ document.getElementById('CA').style.fill = '#002868';
  }
 /*
 $.ajax({
-  url: '/bbldata.csv',
+  url: 'bbldata.csv',
   dataType: 'text',
 }).done(successFunction);
 */
