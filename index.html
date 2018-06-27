@@ -564,7 +564,7 @@ window.confirm = function(message, title, yes_label, callback) {
 function getCounts()
 		{
 		$.ajax({
-  url: 'https://webdev.er.usgs.gov/BBL/int_maps/pages/bbldata.csv',
+  url: 'bbldata.csv',
   dataType: 'text',
 }).done(countstates);
 		
